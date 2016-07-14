@@ -44,11 +44,15 @@ public function rules() {
 
 ### 2. Update your view file:
 
-```html
+Optional template:
+
+```php
 <?= $form->field($model, 'password', [
     "template" => "{input}"
 ])->passwordInput() ?>
+```
 
+```html
 <div id="strength" class="row" style="display: none;">
     <div class="col-xs-12">
         <div class="progress">
