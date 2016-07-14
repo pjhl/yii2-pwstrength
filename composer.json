@@ -1,0 +1,23 @@
+{
+    "name": "yii2-pwstrength",
+    "description": "This extension provides a simple password validator for Yii Framework 2.0.",
+    "keywords": ["yii2", "password", "validation", "validator", "strength"],
+    "homepage": "https://github.com/pjhl/yii2-pwstrength",
+    "type": "yii2-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pjhl",
+            "email": "pjhl.coder@gmail.com",
+            "homepage": "https://github.com/pjhl"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "pjhl\\pwstrength\\": ""
+        }
+    }
+}
