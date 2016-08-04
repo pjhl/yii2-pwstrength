@@ -4,7 +4,9 @@
  * @returns {undefined}
  */
 (function ($) {
-
+    
+    var ALLOW_SYMBOLS = /^[A-Za-z0-9!@#$*%\^&*\(\)_+=\\|\/\.,:;\[\]{}`~\'\"-]+$/;
+    
     var methods = {
         init: function (options) {
             var $this = this;
@@ -27,14 +29,20 @@
          * @returns {undefined}
          */
         handeValidation: function (value, messages) {
-            var strength = checkPassword(value);
-            if (strength === 'low') {
+            var err = chackSymbols(value);
+            if (err) {
                 messages.push('Слабый пароль');
+            } else {
+                var strength = checkPassword(value);
+                if (strength === 'low') {
+                    messages.push('Слабый пароль');
+                }
             }
             
             this.trigger('strengthChange', [{
                     value: value,
                     strength: strength, // low|middle|strong
+                    error: err,
                     percent: calculatePercent(value, strength)
             }]);
         }
@@ -85,7 +93,7 @@
         var s_letters = "qwertyuiopasdfghjklzxcvbnm"; // Буквы в нижнем регистре
         var b_letters = "QWERTYUIOPLKJHGFDSAZXCVBNM"; // Буквы в верхнем регистре
         var digits = "0123456789"; // Цифры
-        var specials = "!@#$%^&*()_-+=\|/.,:;[]{}`~"; // Спецсимволы
+        var specials = "!@#$%^&*()_-+=\|/.,:;[]{}`~'\""; // Спецсимволы
         var is_s = false; // Есть ли в пароле буквы в нижнем регистре
         var is_b = false; // Есть ли в пароле буквы в верхнем регистре
         var is_d = false; // Есть ли в пароле цифры
@@ -129,7 +137,29 @@
         return text;
     }
     
-    
+    /**
+     * Проверка символов пароля.
+     * Внимание! Ошибрка сразу транслируется пользователю
+     * @param {string} password Пароль
+     * @returns {string|boolean}    True - нету ошибок, иначе - текст ошибки
+     */
+    function chackSymbols(password) {
+        if (password) {
+            if (password.indexOf(' ') !== -1) {
+                return 'Пробелы в пароле запрещены';
+            }
+            if (/\r\n\t/.test(password)) {
+                return 'Знаки табуляции в пароле запрещены';
+            }
+            if (/[а-яёїє]/.test(password)) {
+                return 'Русские символы в пароле запрещены';
+            }
+            if (!ALLOW_SYMBOLS.test(password)) {
+                return 'В пароле присутствуют запрещенные символы';
+            }
+        }
+        return false;
+    }
 
     $.fn.passwordStrength = function (method) {
         if (methods[method]) {

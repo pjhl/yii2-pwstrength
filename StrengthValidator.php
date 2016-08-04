@@ -8,17 +8,23 @@ use yii\validators\Validator;
 use pjhl\pwstrength\assets\PasswordStrengthAsset;
 
 class StrengthValidator extends Validator {
-
+    
+    CONST ALLOW_SYMBOLS = '/^[A-Za-z0-9!@#$*%\^&*\(\)_+=\\\|\/\.,:;\[\]{}`~\'"-]+$/';
+    
+    public $symbolsMessage = 'Unacceptable symbols';
+    
     public function init() {
         parent::init();
-        $this->message = 'Weak Password';
+        $this->message = 'Weak password';
     }
 
     public function validateAttribute($model, $attribute) {
         $value = $model->$attribute;
         $length = strlen($value);
-
-        if ($length < 6) {
+        
+        if (!preg_match(self::ALLOW_SYMBOLS, $value)) {
+            $model->addError($attribute, $this->symbolsMessage);
+        } else if ($length < 6) {
             $model->addError($attribute, $this->message);
         }
     }

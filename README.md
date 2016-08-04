@@ -76,23 +76,28 @@ jQuery(function(){
         
         var label = '';
         var labelType = '';
-        if (len<6) {
-            label = 'The password is too simple, must be at least 6 characters';
+        if (data.error) {
+            label = data.error;
             labelType = 'danger';
         } else {
-            switch (data.strength) {
-                case 'low':
-                    label = 'The password is too simple';
-                    labelType = 'danger';
-                    break;
-                case 'middle':
-                    label = 'A middle password';
-                    labelType = 'warning';
-                    break;
-                case 'strong':
-                    label = 'A strong password';
-                    labelType = 'success';
-                    break;
+            if (len<6) {
+                label = 'The password is too simple, must be at least 6 characters';
+                labelType = 'danger';
+            } else {
+                switch (data.strength) {
+                    case 'low':
+                        label = 'The password is too simple';
+                        labelType = 'danger';
+                        break;
+                    case 'middle':
+                        label = 'A middle password';
+                        labelType = 'warning';
+                        break;
+                    case 'strong':
+                        label = 'A strong password';
+                        labelType = 'success';
+                        break;
+                }
             }
         }
 
